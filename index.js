@@ -14,15 +14,15 @@ const getDataByMonth = (req, res) => {
    timefilter = filtered.map(item => item.time)  //Массив времени из отфильтрованного массива
    ratefilter = filtered.map(item => item.rate);  //Массив оценок из отфильтрованного массива
 
-   res.status(200)   //Вывожу сообщение при статусе 200
-      .json({
-         status: 'success',
-         notes: dayfilter.length,    //Сколько дней
-         data: { dayfilter, timefilter, ratefilter }  //Объект с массивами дней, времени и оценками
-      })
+
+   res.json({
+      status: 'success',
+      notes: dayfilter.length,    //Сколько дней
+      data: { dayfilter, timefilter, ratefilter }  //Объект с массивами дней, времени и оценками
+   })
 }
 
-app.get('/check/:month', getDataByMonth)    //Вызов по маршруту, и указанному времени
+app.get('/check/:month', getDataByMonth)    //Вызов по маршруту, и указанному месяцу
 
 
 const port = 8000;

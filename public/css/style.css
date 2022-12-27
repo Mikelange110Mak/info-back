@@ -1,0 +1,96 @@
+@charset "UTF-8";
+
+/* Обнуляющий стиль */
+*,
+*::before,
+*::after {
+   margin: 0;
+   padding: 0;
+   border: 0;
+   -webkit-box-sizing: border-box;
+   box-sizing: border-box;
+}
+
+body,
+html {
+   height: 100%;
+}
+
+li {
+   list-style: none;
+}
+
+a,
+a:visited {
+   text-decoration: none;
+}
+
+a:hover {
+   text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+   font-weight: inherit;
+   font-size: inherit;
+}
+
+img {
+   vertical-align: top;
+}
+
+/* ================================================================ */
+
+/* Settings */
+
+@import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,400;0,500;0,700;1,400&display=swap");
+
+body {
+   background-color: #414040;
+   font-family: 'Mulish', sans-serif;
+}
+
+/* ================================================================ */
+
+
+.table {
+   background-color: #eef0ff;
+   text-align: center;
+}
+
+.table__columns {
+   display: flex;
+   justify-content: center;
+   background-color: #cccfe2;
+}
+
+.table__value {
+   font-weight: 700;
+   margin-bottom: 10px;
+}
+
+.table__column {
+   flex: 0 1 20%;
+}
+
+.table__list {
+   display: flex;
+   flex-direction: column;
+}
+
+.table__list :nth-child(odd) {
+   background-color: #eef0ff;
+}
+
+.table__list-item {
+   padding: 5px 0;
+}
+
+.table__average {
+   margin-top: 10px;
+   font-weight: 700;
+}

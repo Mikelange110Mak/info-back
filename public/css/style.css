@@ -94,3 +94,25 @@ body {
    margin-top: 10px;
    font-weight: 700;
 }
+
+.select {
+   background-color: #575555;
+   padding: 10px 0;
+}
+
+.select__label {
+   padding: 0 10px;
+}
+
+.select__input {
+   padding: 3px 5px;
+   border-radius: 6px;
+   margin-right: 4px;
+   outline: none;
+}
+
+.select__submit {
+   padding: 4px 8px;
+   border-radius: 9px;
+   cursor: pointer;
+}

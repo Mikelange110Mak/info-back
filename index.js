@@ -3,6 +3,7 @@ const fs = require('fs');
 const JSONdb = require('simple-json-db');
 
 const app = express();
+app.use(express.urlencoded({ extended: false }))
 app.set('view engine', 'ejs')      //Подключаю шаблонизатор EJS
 app.set('views', './views')        //Путь к шаблонизатору
 app.use(express.static('public'))  //Статические файлы (для CSS)
@@ -16,20 +17,12 @@ function arrays(month) {
    timefilter = filtered.map(item => item.time) //Массив времени из отфильтрованного массива
    ratefilter = filtered.map(item => item.rate); //Массив оценок из отфильтрованного массива
    averageValue = timefilter.reduce((a, b) => (a + b), 0) //Среднее значение времени за месяц
+
 }
 
 
-const getDataByMonth = (req, res) => {
-
-   let month = +req.params.month  //Устанавливаю req.param на месяц
-
-   arrays(month)
-
-   res.json({
-      status: 'success',
-      notes: dayfilter.length,    //Сколько дней
-      data: { dayfilter, timefilter, ratefilter }  //Объект с массивами дней, времени и оценками
-   })
+const mainPage = (req, res) => {
+   res.render('index')
 }
 
 //Функция вывода результата в хтмле:
@@ -46,20 +39,22 @@ const getResult = (req, res) => {
       rateItems: ratefilter,
       average: Math.round(averageValue / dayfilter.length)
    })
+   console.log(req.path);
 }
 
 const chooseMonth = (req, res) => {
-   res.render('main', {
-      title: 'Главная'
-   })
+   console.log(req.path);
+   let selectedMonth = req.body.month
+   res.redirect(`/result/${selectedMonth}`)
 
-   console.log(req.query.month);
 }
 
+app.get('/', mainPage)
 app.get('/', chooseMonth)
-app.get('/result/:month', getResult) //Вызов маршрута для вывода результата
+app.post('/result', chooseMonth)
 
-app.get('/get_info_by_month/:month', getDataByMonth)    //Вызов по маршруту, и указанному месяцу
+app.get('/result/:month', getResult) //Маршрут для вывода результата
+
 
 const port = 8000;
 app.listen(port, () => {

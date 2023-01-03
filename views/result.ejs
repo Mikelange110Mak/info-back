@@ -10,41 +10,51 @@
 <body>
    <%- include('blocks/form') -%>
       <section class="table">
-         <div class="table__columns">
-            <div class="table__column day">
-               <p class="table__value">День</p>
-               <ul class="table__list">
-                  <% for(let i in daysItems){ %>
-                     <li class="table__list-item">
-                        <%= daysItems[i] %>
-                     </li>
-                     <% } %>
-               </ul>
-            </div>
-            <div class="table__column time">
-               <p class="table__value">Время</p>
-               <ul class="table__list">
-                  <% for(let i in timeItems){ %>
-                     <li class="table__list-item">
-                        <%= timeItems[i] %>
-                     </li>
-                     <% } %>
-               </ul>
-            </div>
-            <div class="table__column rate">
-               <p class="table__value">Оценка</p>
-               <ul class="table__list">
-                  <% for(let i in rateItems){ %>
-                     <li class="table__list-item">
-                        <%= rateItems[i] %>
-                     </li>
-                     <% } %>
-               </ul>
-            </div>
+         <div class="table__selected-month">
+            <%= message %>
          </div>
+         <div class="table__columns">
+            <% if(daysItems.length<1){%>
+               <p>Данные за <%= message %> отсутствуют </p>
+               <% } %>
+                  <%if(daysItems.length>0) {%>
+                     <div class="table__column day">
+                        <p class="table__value">День</p>
+                        <ul class="table__list">
+                           <% for(let i in daysItems){ %>
+                              <li class="table__list-item">
+                                 <%= daysItems[i] %>
+                              </li>
+                              <% } %>
+                        </ul>
+                     </div>
+                     <div class="table__column time">
+                        <p class="table__value">Время</p>
+                        <ul class="table__list">
+                           <% for(let i in timeItems){ %>
+                              <li class="table__list-item">
+                                 <%= timeItems[i] %>
+                              </li>
+                              <% } %>
+                        </ul>
+                     </div>
+                     <div class="table__column rate">
+                        <p class="table__value">Оценка</p>
+                        <ul class="table__list">
+                           <% for(let i in rateItems){ %>
+                              <li class="table__list-item">
+                                 <%= rateItems[i] %>
+                              </li>
+                              <% } %>
+                        </ul>
+                     </div>
+
+         </div>
+
          <div class="table__average">
             Среднее значение <%= average %> минут в месяц
          </div>
+         <% } %>
       </section>
 </body>
 

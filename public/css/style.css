@@ -62,7 +62,14 @@ body {
    text-align: center;
 }
 
+.table__selected-month {
+   padding: 6px 0;
+   font-weight: 700;
+   font-size: 20px;
+}
+
 .table__columns {
+   padding: 5px 0;
    display: flex;
    justify-content: center;
    background-color: #cccfe2;
@@ -83,7 +90,7 @@ body {
 }
 
 .table__list :nth-child(odd) {
-   background-color: #eef0ff;
+   background-color: #eff0fa;
 }
 
 .table__list-item {
@@ -91,8 +98,9 @@ body {
 }
 
 .table__average {
-   margin-top: 10px;
+   margin-top: 5px;
    font-weight: 700;
+   padding: 5px 0;
 }
 
 .select {

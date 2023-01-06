@@ -1,0 +1,31 @@
+<form method="post" class="select add" action="/add">
+   <label class="select__label" for="addDay">Введите день</label>
+   <input class="select__day" name="addDay" type="text" required maxlength="2">
+   <label class="select__label" for="addMonth">Выберите месяц</label>
+   <select class="select__input" name="addMonth" id="add-month">
+      <option class="select__month-item" value="1">Январь</option>
+      <option class="select__month-item" value="2">Февраль</option>
+      <option class="select__month-item" value="3">Март</option>
+      <option class="select__month-item" value="4">Апрель</option>
+      <option class="select__month-item" value="5">Май</option>
+      <option class="select__month-item" value="6">Июнь</option>
+      <option class="select__month-item" value="7">Июль</option>
+      <option class="select__month-item" value="8">Август</option>
+      <option class="select__month-item" value="9">Сентябрь</option>
+      <option class="select__month-item" value="10">Октябрь</option>
+      <option class="select__month-item" value="11">Ноябрь</option>
+      <option class="select__month-item" value="12">Декабрь</option>
+   </select>
+   <label class="select__label" for="addTime">Время в минутах</label>
+   <input class="select__day" name="addTime" type="text" required maxlength="4">
+   <label class="select__label" for="addRate">Выберите оценку</label>
+   <select class="select__input" name="addRate" id="rate">
+      <option class="select__rate-item" value="1">1</option>
+      <option class="select__rate-item" value="2">2</option>
+      <option class="select__rate-item" value="3">3</option>
+      <option class="select__rate-item" value="4">4</option>
+      <option class="select__rate-item" value="5">5</option>
+   </select>
+   <button class="select__submit add-button" type="submit">Добавить день
+   </button>
+</form>

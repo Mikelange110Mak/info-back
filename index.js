@@ -1,6 +1,7 @@
 const express = require('express')
 const JSONdb = require('simple-json-db');
-
+const fs = require('fs');
+//const { error } = require('console');
 
 const app = express();
 app.use(express.urlencoded({ extended: false }))    //Подключаю body-parser
@@ -11,11 +12,11 @@ app.use(express.static('public'))                //Статические фай
 
 const db = new JSONdb('./db.json'); //Получаю JSON файлик
 let selectedMonth  //Переменная для отображения текста в HTML
-
+//console.log(db);
 
 //Функция где хранятся мои массивы и некоторые данные:
 function arrays(month) {
-   const filtered = db.storage.timeForCode.filter(item => item.month === month) //Применяю методы массива на JSON файл, фильтрую по месяцу
+   const filtered = db.storage.filter(item => item.month === month) //Применяю методы массива на JSON файл, фильтрую по месяцу
    dayfilter = filtered.map(item => item.day) //Массив дней из отфильтрованного массива
    timefilter = filtered.map(item => item.time) //Массив времени из отфильтрованного массива
    ratefilter = filtered.map(item => item.rate); //Массив оценок из отфильтрованного массива
@@ -65,12 +66,43 @@ const chooseMonth = (req, res) => {
 }
 
 
+
+//Функция добавления нового дня:
+const addInfo = (req, res, next) => {
+   //Чтобы вся эта залупа работала, мне надо прочитать мой json, спарсить, запушить новые данные в паршенный массив и застрингифайнуть
+   const arr = fs.readFileSync('db.json') //Собсна мой массива
+   const parsedArr = JSON.parse(arr)      //Паршу его
+
+   //Инфа из формочки:
+   let dayAdd = +req.body.addDay;
+   let monthAdd = +req.body.addMonth;
+   let timeAdd = +req.body.addTime;
+   let rateAdd = +req.body.addRate;
+
+   //Проверка чтобы введеная в форму инфа была правильной:
+   if (isNaN(dayAdd) || isNaN(monthAdd) || isNaN(timeAdd) || isNaN(rateAdd)) return res.redirect('/');
+   else {
+      parsedArr.push({ day: dayAdd, month: monthAdd, time: timeAdd, rate: rateAdd })   //Пушим новую инфу в массив
+      let stringArr = JSON.stringify(parsedArr)  //Стрингифаем его
+      fs.writeFileSync('db.json', stringArr);   //Переписываем JSON
+      next() //Происходит баг что данные пушатся несколько раз, это его исправляет
+      res.render('blocks/success', {   //Рендерим мой EJS
+         day: dayAdd,
+         month: monthAdd,
+         time: timeAdd,
+         rate: rateAdd
+      })
+   }
+}
+
+
+
+
 //Маршруты:
 app.get('/', mainPage)                //Главная
 app.post('/result', chooseMonth)      //Выбрать месяц
 app.get('/result/:month', getResult) //Вывод результата
-
-
+app.post('/add', addInfo)            //Добавить новый день
 
 const port = 8000;
 app.listen(port, () => {

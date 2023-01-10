@@ -1,7 +1,7 @@
 const express = require('express')
 const JSONdb = require('simple-json-db');
 const fs = require('fs');
-//const { error } = require('console');
+
 
 const app = express();
 app.use(express.urlencoded({ extended: false }))    //Подключаю body-parser
@@ -11,8 +11,7 @@ app.use(express.static('public'))                //Статические фай
 
 
 const db = new JSONdb('./db.json'); //Получаю JSON файлик
-let selectedMonth  //Переменная для отображения текста в HTML
-//console.log(db);
+let selectedMonth  //Переменная для отображения текста в HTML (пригодится в функции arrays)
 
 //Функция где хранятся мои массивы и некоторые данные:
 function arrays(month) {
@@ -59,12 +58,12 @@ const getResult = (req, res) => {
    })
 
 }
+
 //Функция выбора месяца, в следствии которой уже выводится результат
 const chooseMonth = (req, res) => {
    let selectedMonth = req.body.month
    res.redirect(`/result/${selectedMonth}`)
 }
-
 
 
 //Функция добавления нового дня:
@@ -80,11 +79,12 @@ const addInfo = (req, res, next) => {
    let rateAdd = +req.body.addRate;
 
    //Проверка чтобы введеная в форму инфа была правильной:
-   if (isNaN(dayAdd) || isNaN(monthAdd) || isNaN(timeAdd) || isNaN(rateAdd)) return res.redirect('/');
+   if (isNaN(dayAdd) || isNaN(monthAdd) || isNaN(timeAdd) || isNaN(rateAdd) || dayAdd > 31 || dayAdd < 1 || timeAdd < 1) return res.render('blocks/wrongData');
    else {
       parsedArr.push({ day: dayAdd, month: monthAdd, time: timeAdd, rate: rateAdd })   //Пушим новую инфу в массив
       let stringArr = JSON.stringify(parsedArr)  //Стрингифаем его
       fs.writeFileSync('db.json', stringArr);   //Переписываем JSON
+      console.log(`Day ${dayAdd}.${monthAdd} have been added`);
       next() //Происходит баг что данные пушатся несколько раз, это его исправляет
       res.render('blocks/success', {   //Рендерим мой EJS
          day: dayAdd,
@@ -97,15 +97,14 @@ const addInfo = (req, res, next) => {
 
 
 
-
 //Маршруты:
 app.get('/', mainPage)                //Главная
 app.post('/result', chooseMonth)      //Выбрать месяц
 app.get('/result/:month', getResult) //Вывод результата
 app.post('/add', addInfo)            //Добавить новый день
 
+//Сервер:
 const port = 8000;
 app.listen(port, () => {
    console.log(`App running on port ${port}...`);
-
 })

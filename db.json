@@ -508,5 +508,71 @@
       "month": 10,
       "time": 78,
       "rate": 3
+   },
+   {
+      "day": 21,
+      "month": 10,
+      "time": 53,
+      "rate": 3
+   },
+   {
+      "day": 23,
+      "month": 10,
+      "time": 65,
+      "rate": 3
+   },
+   {
+      "day": 24,
+      "month": 10,
+      "time": 113,
+      "rate": 3
+   },
+   {
+      "day": 27,
+      "month": 10,
+      "time": 120,
+      "rate": 3
+   },
+   {
+      "day": 28,
+      "month": 10,
+      "time": 120,
+      "rate": 3
+   },
+   {
+      "day": 29,
+      "month": 10,
+      "time": 70,
+      "rate": 3
+   },
+   {
+      "day": 31,
+      "month": 10,
+      "time": 260,
+      "rate": 3
+   },
+   {
+      "day": 1,
+      "month": 11,
+      "time": 120,
+      "rate": 3
+   },
+   {
+      "day": 3,
+      "month": 11,
+      "time": 240,
+      "rate": 4
+   },
+   {
+      "day": 4,
+      "month": 11,
+      "time": 126,
+      "rate": 3
+   },
+   {
+      "day": 5,
+      "month": 11,
+      "time": 184,
+      "rate": 3
    }
 ]

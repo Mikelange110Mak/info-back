@@ -2,26 +2,29 @@
    <title>День добавлен!</title>
    <link rel="stylesheet" href="/css/style.css">
 </head>
-<div class="wrapper">
-   <%- include('header') -%>
-      <div class="success main">День успешно добавлен
-         <p class="success__info">День: <span>
-               <%= day %>
-            </span>
-         </p>
-         <p class="success__info">Месяц: <span>
-               <%= month %>
-            </span>
-         </p>
-         <p class="success__info">Время в минутах: <span>
-               <%= time %>
-            </span>
-         </p>
-         <p class="success__info">Оценка: <span>
-               <%= rate %>
-            </span>
-         </p>
-         <a class="success__back" href="/">Вернуться</a>
-      </div>
-      <%- include('footer') -%>
-</div>
+
+<body>
+   <div class="wrapper">
+      <%- include('header') -%>
+         <div class="response main">День успешно добавлен
+            <p class="response__info">День: <span>
+                  <%= day %>
+               </span>
+            </p>
+            <p class="response__info">Месяц: <span>
+                  <%= month %>
+               </span>
+            </p>
+            <p class="response__info">Время в минутах: <span>
+                  <%= time %>
+               </span>
+            </p>
+            <p class="response__info">Оценка: <span>
+                  <%= rate %>
+               </span>
+            </p>
+            <a class="response__back button-back" href="/">Вернуться</a>
+         </div>
+         <%- include('footer') -%>
+   </div>
+</body>

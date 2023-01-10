@@ -1,0 +1,15 @@
+<head>
+   <title>Неправильный ввод</title>
+   <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+   <div class="wrapper">
+      <%- include('header') -%>
+         <div class="response main"><span class="response__red">Ошибка</span> Данные введены неверно
+            <p class="response__note">Не удалось добавить день, попробуйте ввести корректные данные в поля ввода</p>
+            <a class="response__back" href="/">Вернуться</a>
+         </div>
+         <%- include('footer') -%>
+   </div>
+</body>

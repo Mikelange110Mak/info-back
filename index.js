@@ -10,59 +10,97 @@ app.set('views', './views')                       //Путь к шаблониз
 app.use(express.static('public'))                //Статические файлы (для CSS)
 
 
-const db = new JSONdb('./db.json'); //Получаю JSON файлик
+const db = new JSONdb('db.json'); //Получаю JSON файлик
+
 let selectedMonth  //Переменная для отображения текста в HTML (пригодится в функции arrays)
 
-//Функция где хранятся мои массивы и некоторые данные:
-function arrays(month) {
-   const filtered = db.storage.filter(item => item.month === month) //Применяю методы массива на JSON файл, фильтрую по месяцу
-   dayfilter = filtered.map(item => item.day) //Массив дней из отфильтрованного массива
+const storage = db.JSON()
+
+
+
+/*
+const check = (req, res, next) => {
+   storage["2022"]["11"].push({ day: 77, time: 777, rate: 7 })
+   db.JSON(storage)
+   db.sync();
+   next()
+}
+*/
+//const filtered = db.filter(item => item.year === year)
+//console.log(filtered);
+
+
+
+function arrays(year, month) {
+
+   //это чтобы не было багов с несколькими нулями
+   if (+month < 10) {
+      month = month.replace(/0/g, '');
+      month = `0${month}`
+   }
+
+   //собсна массивы которые перебираются
+   const filtered = storage[year][month]
+   dayfilter = filtered.map(item => item.day)   //Массив дней из отфильтрованного массива
    timefilter = filtered.map(item => item.time) //Массив времени из отфильтрованного массива
    ratefilter = filtered.map(item => item.rate); //Массив оценок из отфильтрованного массива
    averageValue = timefilter.reduce((a, b) => (a + b), 0) //Среднее значение времени за месяц
 
+   //для отображения названий месяцев на странице
    switch (month) {
-      case 1: selectedMonth = 'Январь'; break;
-      case 2: selectedMonth = 'Февраль'; break;
-      case 3: selectedMonth = 'Март'; break;
-      case 4: selectedMonth = 'Апрель'; break;
-      case 5: selectedMonth = 'Май'; break;
-      case 6: selectedMonth = 'Июнь'; break
-      case 7: selectedMonth = 'Июль'; break;
-      case 8: selectedMonth = 'Август'; break;
-      case 9: selectedMonth = 'Сентябрь'; break;
-      case 10: selectedMonth = 'Октябрь'; break;
-      case 11: selectedMonth = 'Ноябрь'; break;
-      case 12: selectedMonth = 'Декабрь'; break;
+      case '01': selectedMonth = 'Январь'; break;
+      case '02': selectedMonth = 'Февраль'; break;
+      case '03': selectedMonth = 'Март'; break;
+      case '04': selectedMonth = 'Апрель'; break;
+      case '05': selectedMonth = 'Май'; break;
+      case '06': selectedMonth = 'Июнь'; break
+      case '07': selectedMonth = 'Июль'; break;
+      case '08': selectedMonth = 'Август'; break;
+      case '09': selectedMonth = 'Сентябрь'; break;
+      case '10': selectedMonth = 'Октябрь'; break;
+      case '11': selectedMonth = 'Ноябрь'; break;
+      case '12': selectedMonth = 'Декабрь'; break;
    }
 }
 
-//Просто главная страница, на которой пока ничего нету
+
+
+//Просто главная страница
 const mainPage = (req, res) => {
    res.render('index')
 }
 
-//Функция вывода результата:
+
+
+//Функция выбора месяца, в следствии которой уже выводится результат
+const chooseMonth = (req, res) => {
+   let year = req.body.year
+   let month = req.body.month
+
+   res.redirect(`/result/${year}/${month}`)
+}
+
+
+
 const getResult = (req, res) => {
+   let year = req.params.year
+   let month = req.params.month
 
-   month = +req.params.month
 
-   arrays(month)               //Массив с данными для работы
+
+   arrays(year, month)
+   //if (+month < 10) month = `0${month}`
+   console.log(year, month);
+
    res.render('result', {      //Рендер HTML
       title: `Результат за ${selectedMonth}`,
-      message: selectedMonth,
+      monthName: selectedMonth,
+      yearValue: year,
       daysItems: dayfilter,
       timeItems: timefilter,
       rateItems: ratefilter,
       average: Math.round(averageValue / dayfilter.length)
    })
-
-}
-
-//Функция выбора месяца, в следствии которой уже выводится результат
-const chooseMonth = (req, res) => {
-   let selectedMonth = req.body.month
-   res.redirect(`/result/${selectedMonth}`)
 }
 
 
@@ -98,11 +136,13 @@ const addInfo = (req, res, next) => {
 
 
 //Маршруты:
+
 app.get('/', mainPage)                //Главная
 app.post('/result', chooseMonth)      //Выбрать месяц
-app.get('/result/:month', getResult) //Вывод результата
-app.post('/add', addInfo)            //Добавить новый день
+app.get('/result/:year/:month', getResult) //Вывод результата
+//app.post('/add', addInfo)            //Добавить новый день
 
+//app.get('/check', check)
 //Сервер:
 const port = 8000;
 app.listen(port, () => {

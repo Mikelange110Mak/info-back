@@ -11,26 +11,10 @@ app.use(express.static('public'))                //Статические фай
 
 
 const db = new JSONdb('db.json'); //Получаю JSON файлик
-
 let selectedMonth  //Переменная для отображения текста в HTML (пригодится в функции arrays)
-
 const storage = db.JSON()
 
-
-
-/*
-const check = (req, res, next) => {
-   storage["2022"]["11"].push({ day: 77, time: 777, rate: 7 })
-   db.JSON(storage)
-   db.sync();
-   next()
-}
-*/
-//const filtered = db.filter(item => item.year === year)
-//console.log(filtered);
-
-
-
+//функция с массивами данных для отображения (пригодится в функции getResult)
 function arrays(year, month) {
 
    //это чтобы не было багов с несколькими нулями
@@ -40,11 +24,20 @@ function arrays(year, month) {
    }
 
    //собсна массивы которые перебираются
-   const filtered = storage[year][month]
-   dayfilter = filtered.map(item => item.day)   //Массив дней из отфильтрованного массива
-   timefilter = filtered.map(item => item.time) //Массив времени из отфильтрованного массива
-   ratefilter = filtered.map(item => item.rate); //Массив оценок из отфильтрованного массива
-   averageValue = timefilter.reduce((a, b) => (a + b), 0) //Среднее значение времени за месяц
+   const filtered = storage[year][month];
+
+   if (filtered) {
+      dayfilter = filtered.map(item => item.day)   //Массив дней из отфильтрованного массива
+      timefilter = filtered.map(item => item.time) //Массив времени из отфильтрованного массива
+      ratefilter = filtered.map(item => item.rate); //Массив оценок из отфильтрованного массива
+      averageValue = timefilter.reduce((a, b) => (a + b), 0) //Среднее значение времени за месяц
+      averageRate = ratefilter.reduce((a, b) => (a + b), 0)
+   } else {
+      dayfilter = []
+      timefilter = []
+      ratefilter = []
+      averageValue = []
+   }
 
    //для отображения названий месяцев на странице
    switch (month) {
@@ -62,8 +55,7 @@ function arrays(year, month) {
       case '12': selectedMonth = 'Декабрь'; break;
    }
 }
-
-
+arrays('2022', '8')
 
 //Просто главная страница
 const mainPage = (req, res) => {
@@ -71,9 +63,9 @@ const mainPage = (req, res) => {
 }
 
 
-
 //Функция выбора месяца, в следствии которой уже выводится результат
 const chooseMonth = (req, res) => {
+
    let year = req.body.year
    let month = req.body.month
 
@@ -81,16 +73,12 @@ const chooseMonth = (req, res) => {
 }
 
 
-
 const getResult = (req, res) => {
+
    let year = req.params.year
    let month = req.params.month
 
-
-
-   arrays(year, month)
-   //if (+month < 10) month = `0${month}`
-   console.log(year, month);
+   arrays(year, month) //функция с массивами
 
    res.render('result', {      //Рендер HTML
       title: `Результат за ${selectedMonth}`,
@@ -99,36 +87,43 @@ const getResult = (req, res) => {
       daysItems: dayfilter,
       timeItems: timefilter,
       rateItems: ratefilter,
-      average: Math.round(averageValue / dayfilter.length)
+      average: Math.round(averageValue / dayfilter.length),
+      averageRate: (averageRate / dayfilter.length).toFixed(2)
    })
+
+
 }
 
 
 //Функция добавления нового дня:
 const addInfo = (req, res, next) => {
-   //Чтобы вся эта залупа работала, мне надо прочитать мой json, спарсить, запушить новые данные в паршенный массив и застрингифайнуть
-   const arr = fs.readFileSync('db.json') //Собсна мой массива
-   const parsedArr = JSON.parse(arr)      //Паршу его
 
-   //Инфа из формочки:
-   let dayAdd = +req.body.addDay;
-   let monthAdd = +req.body.addMonth;
-   let timeAdd = +req.body.addTime;
-   let rateAdd = +req.body.addRate;
+   // Введенные данные в переменную:
+   let addDay = +req.body.addDay
+   addMonth = req.body.addMonth
+   addYear = req.body.addYear
+   addTime = +req.body.addTime
+   addRate = +req.body.addRate
 
-   //Проверка чтобы введеная в форму инфа была правильной:
-   if (isNaN(dayAdd) || isNaN(monthAdd) || isNaN(timeAdd) || isNaN(rateAdd) || dayAdd > 31 || dayAdd < 1 || timeAdd < 1) return res.render('blocks/wrongData');
-   else {
-      parsedArr.push({ day: dayAdd, month: monthAdd, time: timeAdd, rate: rateAdd })   //Пушим новую инфу в массив
-      let stringArr = JSON.stringify(parsedArr)  //Стрингифаем его
-      fs.writeFileSync('db.json', stringArr);   //Переписываем JSON
-      console.log(`Day ${dayAdd}.${monthAdd} have been added`);
-      next() //Происходит баг что данные пушатся несколько раз, это его исправляет
+   console.log([addDay, addMonth, addYear, addTime, addRate]);
+
+   if (addMonth.length === 1) addMonth = `0${addMonth}` //это чтобы не было багов с несколькими нулями
+
+   //Проверка на правильность введенных данных
+   if (typeof (addMonth) !== 'string' || typeof (addYear) !== 'string' || isNaN(addDay) || isNaN(addTime) || isNaN(addRate) || addDay > 31 || addDay < 1 || addTime < 1) {
+      res.render('blocks/wrongData'); //Рендер страницы если данные неверны
+   } else {
+      storage[addYear][addMonth].push({ day: addDay, time: addTime, rate: addRate })  //пушу новые данные в массив
+      db.JSON(storage)  //кидаю их в хранилище
+      db.sync();        //синхронизирую
+      next()           //это чтобы нодмон не перезагружал страницу
+
       res.render('blocks/success', {   //Рендерим мой EJS
-         day: dayAdd,
-         month: monthAdd,
-         time: timeAdd,
-         rate: rateAdd
+         day: addDay,
+         month: addMonth,
+         year: addYear,
+         time: addTime,
+         rate: addRate
       })
    }
 }
@@ -140,9 +135,8 @@ const addInfo = (req, res, next) => {
 app.get('/', mainPage)                //Главная
 app.post('/result', chooseMonth)      //Выбрать месяц
 app.get('/result/:year/:month', getResult) //Вывод результата
-//app.post('/add', addInfo)            //Добавить новый день
+app.post('/add', addInfo)            //Добавить новый день
 
-//app.get('/check', check)
 //Сервер:
 const port = 8000;
 app.listen(port, () => {

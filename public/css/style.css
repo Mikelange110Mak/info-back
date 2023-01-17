@@ -109,9 +109,12 @@ body {
 
 .table__average {
    font-weight: 700;
-   padding: 15px 0;
+   padding: 10px 0;
    background-color: #cccfe2;
+}
 
+.table__average p:not(:last-child) {
+   margin-bottom: 10px;
 }
 
 .select {
@@ -134,7 +137,20 @@ body {
    padding: 4px 8px;
    border-radius: 9px;
    cursor: pointer;
+
+
+   color: rgb(5, 5, 5);
+   background-image: linear-gradient(45deg, #ebebf8 50%, transparent 50%);
+   background-position: 100%;
+   background-size: 400%;
+   transition: background 220ms ease-in-out;
 }
+
+.select__submit:hover {
+   background-position: 0;
+}
+
+
 
 .add {
    display: flex;
@@ -145,6 +161,7 @@ body {
    padding: 3px 5px;
    max-width: 45px;
    border-radius: 8px;
+   outline: none;
 }
 
 .add-button {

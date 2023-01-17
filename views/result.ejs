@@ -17,7 +17,9 @@
             </div>
             <div class="table__columns">
                <% if(daysItems.length<1){%>
-                  <p>Данные за <%= message %> отсутствуют </p>
+                  <p class="table__columns-nodata-title">Данные за <%= monthName %>
+                        <%= yearValue %> отсутствуют </p>
+
                   <% } %>
                      <%if(daysItems.length>0) {%>
                         <div class="table__column day">
@@ -54,8 +56,12 @@
             </div>
 
             <div class="table__average">
-               Среднее значение <%= average %> минут в месяц
+               <p>Среднее значение <%= average %> минут в месяц</p>
+               <p>Средняя оценка <%= averageRate %>
+               </p>
             </div>
+
+
             <% } %>
          </section>
          <%- include('blocks/footer') -%>
